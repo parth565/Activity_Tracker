@@ -10,8 +10,12 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.content.Intent;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import static android.content.ContentValues.TAG;
 
@@ -20,6 +24,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private static final String TAG = "MainActivity";
 
     private SensorManager sensorManager;
+
+    Button btnSubmitHeight;
+    TextView txtInputHeight;
+    TextView txtTest;
+    String inputHeight;
+
     private Sensor StepCounter;
     private boolean isStepCounterPresent;
 //    private Accelerometer accelerometer;
@@ -34,11 +44,25 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //    private int stepDet = 0;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+        txtInputHeight = (TextView) findViewById(R.id.txtInputHeight);
+        btnSubmitHeight = (Button) findViewById(R.id.btnSubmitHeight);
+        txtTest = (TextView) findViewById((R.id.txtTesting));
+
+
+        btnSubmitHeight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                inputHeight = txtInputHeight.getText().toString();
+                txtTest.setText(inputHeight);
+                openActivity2();
+            }
+        });
+
 
 
 //        Log.d(TAG, "onCreate: Initializing Sensor Services");
@@ -88,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             isStepCounterPresent = false;
         }
 
+
     }
 
     @Override
@@ -99,6 +124,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             textViewStepCounter.setText(String.valueOf(stepCount));
         }
     }
+    public void openActivity2(){
+        Intent intent = new Intent(this, Statistics.class);
+        intent.putExtra("Height", inputHeight);
+        startActivity(intent);
+    }
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {}
@@ -182,4 +213,5 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if(sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null)
             sensorManager.unregisterListener(this, StepCounter);
     }
+
 }
