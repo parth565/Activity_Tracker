@@ -10,6 +10,10 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.content.Intent;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -18,12 +22,28 @@ public class MainActivity extends AppCompatActivity{
     private SensorManager sensorManager;
     private Accelerometer accelerometer;
     private Gyroscope gyroscope;
+    Button btnSubmitHeight;
+    TextView txtInputHeight;
+    TextView txtTest;
+    String inputHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+        txtInputHeight = (TextView) findViewById(R.id.txtInputHeight);
+        btnSubmitHeight = (Button) findViewById(R.id.btnSubmitHeight);
+        txtTest = (TextView) findViewById((R.id.txtTesting));
+
+
+        btnSubmitHeight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                inputHeight = txtInputHeight.getText().toString();
+                txtTest.setText(inputHeight);
+                openActivity2();
+            }
+        });
 
 
         Log.d(TAG, "onCreate: Initializing Sensor Services");
@@ -45,6 +65,7 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+
         gyroscope.setListener(new Gyroscope.Listener() {
             @Override
             public void onRotation(float rx, float ry, float rz) {
@@ -63,6 +84,12 @@ public class MainActivity extends AppCompatActivity{
 
 
     }
+    public void openActivity2(){
+        Intent intent = new Intent(this, Statistics.class);
+        intent.putExtra("Height", inputHeight);
+        startActivity(intent);
+    }
+
 
     @Override
     public void onResume() {
@@ -79,4 +106,5 @@ public class MainActivity extends AppCompatActivity{
         accelerometer.unregister();
         gyroscope.register();
     }
+
 }
