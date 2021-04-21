@@ -5,7 +5,7 @@
     android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3CFFFFFF"
+    android:background="#FFFFFF"
     tools:context=".Statistics">
 
     <TextView
@@ -125,5 +125,33 @@
         app:layout_constraintTop_toBottomOf="@+id/txtDistance"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/fire" />
+
+    <Chronometer
+        android:id="@+id/chrono"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:textSize="30dp"
+        />
+
+    <Button
+        android:id="@+id/btnStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="120dp"
+        android:text="Start"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtCalories" />
+
+    <Button
+        android:id="@+id/btnPause"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pause"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/btnStart"
+        app:layout_constraintTop_toBottomOf="@+id/txtCalories" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

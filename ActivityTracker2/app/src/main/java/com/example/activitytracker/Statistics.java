@@ -3,7 +3,11 @@ package com.example.activitytracker;
 import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +27,12 @@ public class Statistics extends AppCompatActivity {
     private int TotalSteps = 0;
     TextView txtSteps;
     TextView txtDistance;
+    Button btnStart;
+    Button btnPause;
     private DecimalFormat decFormat;
+    private Chronometer chrono;
+    private Boolean running;
+    private long pauseOffset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +45,38 @@ public class Statistics extends AppCompatActivity {
         test.setText(testing);
         txtSteps = (TextView) findViewById(R.id.txtSteps);
         txtDistance = (TextView) findViewById(R.id.txtDistance);
+        chrono = (Chronometer) findViewById(R.id.chrono);
 
         accelerometer = new Accelerometer(this);
         gyroscope = new Gyroscope(this);
         stepCounter = new StepCounter(this);
 
-        /*accelerometer.setListener(new Accelerometer.Listener() {
+        Button btnStart = (Button) findViewById(R.id.btnStart);
+        Button btnPause = (Button) findViewById(R.id.btnPause);
+
+        btnStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!running){
+                    chrono.setBase(SystemClock.elapsedRealtime() - pauseOffset);
+                    chrono.start();
+                    running = true;
+                }
+            }
+        });
+        btnPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(running){
+                    chrono.stop();
+                    pauseOffset = SystemClock.elapsedRealtime() - chrono.getBase();
+                    running = false;
+                }
+            }
+        });
+
+
+        accelerometer.setListener(new Accelerometer.Listener() {
             @Override
             public void onTranslation(float tx, float ty, float tz) {
                 if(tx > 1.0f)
@@ -55,6 +90,7 @@ public class Statistics extends AppCompatActivity {
             }
         });
 
+/*
         gyroscope.setListener(new Gyroscope.Listener() {
             @Override
             public void onRotation(float rx, float ry, float rz) {
@@ -84,12 +120,23 @@ public class Statistics extends AppCompatActivity {
                     txtSteps.setText(String.valueOf(TotalSteps));
                     String height = getIntent().getStringExtra("Height");
                     int ht = Integer.parseInt(height);
-                    double distance = TotalSteps * ht * .415;
+                    double distance = (TotalSteps * ht * .415) / 63360;
                     txtDistance.setText(String.valueOf(decFormat.format(distance)));
 
                 }
             }
         });
+    }
+
+    public void startChrono(View v){
+
+    }
+    public void pauseChrono(View v){
+
+    }
+    public void resetChrono(View v){
+        chrono.setBase(SystemClock.elapsedRealtime());
+        pauseOffset = 0;
     }
 
     @Override
