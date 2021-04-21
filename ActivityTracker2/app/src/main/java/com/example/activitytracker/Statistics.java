@@ -73,6 +73,9 @@ public class Statistics extends AppCompatActivity {
                     chrono.stop();
                     pauseOffset = SystemClock.elapsedRealtime() - chrono.getBase();
                     running = false;
+                    long secondsPassed = (SystemClock.elapsedRealtime() - chrono.getBase() / 1000);
+                    String test = String.valueOf(secondsPassed);
+                    txtSteps.setText(test);
                 }
             }
         });
