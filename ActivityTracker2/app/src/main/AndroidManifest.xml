@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.activitytracker">
-
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
     <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true"/>
     <uses-feature android:name="android.hardware.sensor.gyroscope" android:required="true"/>
+    <uses-feature android:name="android.hardware.sensor.stepCounter" android:required="true"/>
+    <uses-feature android:name="android.hardware.sensor.stepDetector" android:required="true"/>
 
     <application
         android:allowBackup="true"
