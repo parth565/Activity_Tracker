@@ -46,6 +46,8 @@ public class Statistics extends AppCompatActivity {
         txtSteps = (TextView) findViewById(R.id.txtSteps);
         txtDistance = (TextView) findViewById(R.id.txtDistance);
         chrono = (Chronometer) findViewById(R.id.chrono);
+        running = false;
+        pauseOffset = 0;
 
         accelerometer = new Accelerometer(this);
         gyroscope = new Gyroscope(this);
