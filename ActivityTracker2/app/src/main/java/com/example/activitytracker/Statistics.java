@@ -84,7 +84,7 @@ public class Statistics extends AppCompatActivity {
                     txtSteps.setText(String.valueOf(TotalSteps));
                     String height = getIntent().getStringExtra("Height");
                     int ht = Integer.parseInt(height);
-                    double distance = TotalSteps * ht * .415;
+                    double distance = TotalSteps * ht * .415 / 63360;
                     txtDistance.setText(String.valueOf(decFormat.format(distance)));
 
                 }
