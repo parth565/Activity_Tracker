@@ -128,10 +128,13 @@
 
     <Chronometer
         android:id="@+id/chrono"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="107dp"
+        android:layout_height="77dp"
         android:textSize="30dp"
-        />
+        app:layout_constraintBottom_toTopOf="@+id/lblSteps"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnStart"
