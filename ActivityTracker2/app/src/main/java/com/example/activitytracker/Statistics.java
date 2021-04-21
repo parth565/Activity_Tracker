@@ -60,9 +60,11 @@ public class Statistics extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!running){
+                    Log.i(TAG, "onClick: Start");
                     chrono.setBase(SystemClock.elapsedRealtime() - pauseOffset);
                     chrono.start();
                     running = true;
+
                 }
             }
         });
@@ -70,10 +72,11 @@ public class Statistics extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(running){
+                    Log.i(TAG, "onClick: Pause");
                     chrono.stop();
                     pauseOffset = SystemClock.elapsedRealtime() - chrono.getBase();
                     running = false;
-                    long secondsPassed = (SystemClock.elapsedRealtime() - chrono.getBase() / 1000);
+                    long secondsPassed = ((SystemClock.elapsedRealtime() - chrono.getBase()) / 1000);
                     String test = String.valueOf(secondsPassed);
                     txtSteps.setText(test);
                 }
@@ -127,7 +130,6 @@ public class Statistics extends AppCompatActivity {
                     int ht = Integer.parseInt(height);
                     double distance = (TotalSteps * ht * .415) / 63360;
                     txtDistance.setText(String.valueOf(decFormat.format(distance)));
-
                 }
             }
         });
