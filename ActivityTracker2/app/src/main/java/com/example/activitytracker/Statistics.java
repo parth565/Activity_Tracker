@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.DecimalFormat;
+
 import static android.content.ContentValues.TAG;
 
 public class Statistics extends AppCompatActivity {
@@ -19,22 +22,26 @@ public class Statistics extends AppCompatActivity {
     private int stepsReceived = 0;
     private int TotalSteps = 0;
     TextView txtSteps;
+    TextView txtDistance;
+    private DecimalFormat decFormat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
 
-        String testing = getIntent().getStringExtra("Height");
+        decFormat = new DecimalFormat("#.##");
+        String testing = getIntent().getStringExtra("Height"); //gets the height of the user from previous page and sets it to testing
         test = (TextView) findViewById(R.id.txtDistance);
         test.setText(testing);
         txtSteps = (TextView) findViewById(R.id.txtSteps);
+        txtDistance = (TextView) findViewById(R.id.txtDistance);
 
         accelerometer = new Accelerometer(this);
         gyroscope = new Gyroscope(this);
         stepCounter = new StepCounter(this);
 
-        accelerometer.setListener(new Accelerometer.Listener() {
+        /*accelerometer.setListener(new Accelerometer.Listener() {
             @Override
             public void onTranslation(float tx, float ty, float tz) {
                 if(tx > 1.0f)
@@ -60,7 +67,7 @@ public class Statistics extends AppCompatActivity {
 //                    getWindow().getDecorView().setBackgroundColor(Color.YELLOW);
                 }
             }
-        });
+        });*/
 
         stepCounter.setListener(new StepCounter.Listener() {
             @Override
@@ -71,10 +78,15 @@ public class Statistics extends AppCompatActivity {
                 {
                     stepsReceived = (int)step;
                 }
-                else
+                else//shows the results
                 {
                     TotalSteps = (int)step - stepsReceived;
                     txtSteps.setText(String.valueOf(TotalSteps));
+                    String height = getIntent().getStringExtra("Height");
+                    int ht = Integer.parseInt(height);
+                    double distance = TotalSteps * ht * .415;
+                    txtDistance.setText(String.valueOf(decFormat.format(distance)));
+
                 }
             }
         });
