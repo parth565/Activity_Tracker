@@ -89,6 +89,38 @@ public class Statistics extends AppCompatActivity implements GoogleApiClient.Con
                     chrono.setBase(SystemClock.elapsedRealtime() - pauseOffset);
                     chrono.start();
                     running = true;
+
+                    stepCounter.setListener(new StepCounter.Listener() {
+                        @Override
+                        public void onStep(float step) {
+                            Log.i(TAG, "onStep: " + step + "stepsReceived: " + stepsReceived + "totalSteps: " + TotalSteps);
+//                getWindow().getDecorView().setBackgroundColor(Color.YELLOW);
+                            if(stepsReceived < 1)
+                            {
+                                stepsReceived = (int)step;
+                            }
+                            else//shows the results
+                            {
+                                TotalSteps = (int)step - stepsReceived;
+                                txtSteps.setText(String.valueOf(TotalSteps)); //displays steps
+                                String height = getIntent().getStringExtra("Height");
+
+                                int ht = Integer.parseInt(height);
+                                double distance = (TotalSteps * ht * .415) / 63360;
+                                txtDistance.setText(String.valueOf(decFormat.format(distance))); //displays distance
+                                double adjustedWeight = Integer.valueOf(userWeight) / 2.2;
+
+
+                                double stepsPerMile = 63360 / (ht * .415);
+                                double metVal = 3.5;
+                                double walkingSpeed = 3;
+
+                                double caloriesBurned = Math.round(((adjustedWeight * metVal) / walkingSpeed) * (TotalSteps/stepsPerMile));
+                                txtCalories.setText(String.valueOf(caloriesBurned));
+
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -103,14 +135,7 @@ public class Statistics extends AppCompatActivity implements GoogleApiClient.Con
 
                     double dSeconds = Double.valueOf(secondsPassed);
 
-                    double caloriesBurnedPerHour;
-                    int weight = Integer.valueOf(userWeight);
-                    double weightInKg = weight * .4535;
-                    caloriesBurnedPerHour = 2.9 * weightInKg;
-                    double caloriesBurnedPerSec = caloriesBurnedPerHour / 3600;
-                    double caloriesBurned = caloriesBurnedPerSec * secondsPassed;
-                    txtCalories.setText(String.valueOf(caloriesBurned));
-                    
+
                 }
             }
         });
@@ -145,33 +170,7 @@ public class Statistics extends AppCompatActivity implements GoogleApiClient.Con
             }
         });*/
 
-        stepCounter.setListener(new StepCounter.Listener() {
-            @Override
-            public void onStep(float step) {
-                Log.i(TAG, "onStep: " + step + "stepsReceived: " + stepsReceived + "totalSteps: " + TotalSteps);
-//                getWindow().getDecorView().setBackgroundColor(Color.YELLOW);
-                if(stepsReceived < 1)
-                {
-                    stepsReceived = (int)step;
-                }
-                else//shows the results
-                {
-                    TotalSteps = (int)step - stepsReceived;
-                    txtSteps.setText(String.valueOf(TotalSteps)); //displays steps
-                    String height = getIntent().getStringExtra("Height");
-                    int ht = Integer.parseInt(height);
-                    double distance = (TotalSteps * ht * .415) / 63360;
-                    txtDistance.setText(String.valueOf(decFormat.format(distance))); //displays distance
 
-
-
-
-
-
-
-                }
-            }
-        });
     }
 
 
