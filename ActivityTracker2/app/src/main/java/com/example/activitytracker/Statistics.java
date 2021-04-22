@@ -22,8 +22,8 @@ import com.google.android.gms.location.ActivityRecognition;
 import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.tasks.Task;
 
-import java.text.DecimalFormat;
 
+import java.text.DecimalFormat;
 import static android.content.ContentValues.TAG;
 
 public class Statistics extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
@@ -50,7 +50,7 @@ public class Statistics extends AppCompatActivity implements GoogleApiClient.Con
     private String userHeight;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
 
@@ -82,7 +82,7 @@ public class Statistics extends AppCompatActivity implements GoogleApiClient.Con
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!running){
+                if (!running) {
                     chrono.setBase(SystemClock.elapsedRealtime() - pauseOffset);
                     chrono.start();
                     running = true;
@@ -92,7 +92,7 @@ public class Statistics extends AppCompatActivity implements GoogleApiClient.Con
         btnPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(running){
+                if (running) {
                     chrono.stop();
                     pauseOffset = SystemClock.elapsedRealtime() - chrono.getBase();
                     running = false;
@@ -102,48 +102,16 @@ public class Statistics extends AppCompatActivity implements GoogleApiClient.Con
             }
         });
 
-
-        accelerometer.setListener(new Accelerometer.Listener() {
-            @Override
-            public void onTranslation(float tx, float ty, float tz) {
-                if(tx > 1.0f)
-                {
-                    getWindow().getDecorView().setBackgroundColor(Color.RED);
-                }
-                else if (ty < -1.0f)
-                {
-                    getWindow().getDecorView().setBackgroundColor(Color.BLUE);
-                }
-            }
-        });
-
-/*
-        gyroscope.setListener(new Gyroscope.Listener() {
-            @Override
-            public void onRotation(float rx, float ry, float rz) {
-                if(rx > 1.0f)
-                {
-//                    getWindow().getDecorView().setBackgroundColor(Color.GREEN);
-                }
-                else if (ry < -1.0f)
-                {
-//                    getWindow().getDecorView().setBackgroundColor(Color.YELLOW);
-                }
-            }
-        });*/
-
         stepCounter.setListener(new StepCounter.Listener() {
             @Override
             public void onStep(float step) {
                 Log.i(TAG, "onStep: " + step + "stepsReceived: " + stepsReceived + "totalSteps: " + TotalSteps);
 //                getWindow().getDecorView().setBackgroundColor(Color.YELLOW);
-                if(stepsReceived < 1)
+                if (stepsReceived < 1) {
+                    stepsReceived = (int) step;
+                } else//shows the results
                 {
-                    stepsReceived = (int)step;
-                }
-                else//shows the results
-                {
-                    TotalSteps = (int)step - stepsReceived;
+                    TotalSteps = (int) step - stepsReceived;
                     txtSteps.setText(String.valueOf(TotalSteps)); //displays steps
                     String height = getIntent().getStringExtra("Height");
                     int ht = Integer.parseInt(height);
@@ -163,7 +131,6 @@ public class Statistics extends AppCompatActivity implements GoogleApiClient.Con
             }
         });
     }
-
 
     @Override
     public void onResume() {
@@ -200,12 +167,13 @@ public class Statistics extends AppCompatActivity implements GoogleApiClient.Con
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    }
 
-    public double getCalories(double d){ //d is the input of the MET value
+    public double getCalories (double met){ //d is the input of the MET value
         double caloriesBurnedPerHour;
         int weight = Integer.valueOf(userWeight);
         double weightInKg = weight * .4535;
-        caloriesBurnedPerHour = d * weightInKg;
+        caloriesBurnedPerHour = met * weightInKg;
         return caloriesBurnedPerHour;
+        }
     }
-}
