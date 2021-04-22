@@ -3,10 +3,9 @@
     package="com.example.activitytracker">
 
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
-    <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="true"/>
-    <uses-feature android:name="android.hardware.sensor.gyroscope" android:required="true"/>
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION"/>
     <uses-feature android:name="android.hardware.sensor.stepCounter" android:required="true"/>
-    <uses-feature android:name="android.hardware.sensor.stepDetector" android:required="true"/>
+
 
 
     <application
@@ -24,6 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".ActivityRecognizedService"/>
     </application>
 
 </manifest>
