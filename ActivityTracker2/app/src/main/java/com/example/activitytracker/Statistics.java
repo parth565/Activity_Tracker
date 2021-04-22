@@ -38,6 +38,7 @@ public class Statistics extends AppCompatActivity implements GoogleApiClient.Con
     private int TotalSteps = 0;
     TextView txtSteps;
     TextView txtDistance;
+    TextView txtCalories;
     Button btnStart;
     Button btnPause;
     private DecimalFormat decFormat;
@@ -48,6 +49,7 @@ public class Statistics extends AppCompatActivity implements GoogleApiClient.Con
     public GoogleApiClient mAPIclient;
     private String userWeight;
     private String userHeight;
+    private long secondsPassed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -65,9 +67,10 @@ public class Statistics extends AppCompatActivity implements GoogleApiClient.Con
         userHeight = getIntent().getStringExtra("Height"); //gets the height of the user from previous page and sets it to testing
         userWeight = getIntent().getStringExtra("Weight");
         test = (TextView) findViewById(R.id.txtDistance);
-        test.setText(userHeight);
+        //test.setText(userHeight);
         txtSteps = (TextView) findViewById(R.id.txtSteps);
         txtDistance = (TextView) findViewById(R.id.txtDistance);
+        txtCalories = (TextView) findViewById(R.id.txtCalories);
         chrono = (Chronometer) findViewById(R.id.chrono);
         running = false;
         pauseOffset = 0;
@@ -96,8 +99,18 @@ public class Statistics extends AppCompatActivity implements GoogleApiClient.Con
                     chrono.stop();
                     pauseOffset = SystemClock.elapsedRealtime() - chrono.getBase();
                     running = false;
-                    long secondsPassed = (SystemClock.elapsedRealtime() - chrono.getBase() / 1000);
-                    String test = String.valueOf(secondsPassed);
+                    secondsPassed = (SystemClock.elapsedRealtime() - chrono.getBase() / 1000);
+
+                    double dSeconds = Double.valueOf(secondsPassed);
+
+                    double caloriesBurnedPerHour;
+                    int weight = Integer.valueOf(userWeight);
+                    double weightInKg = weight * .4535;
+                    caloriesBurnedPerHour = 2.9 * weightInKg;
+                    double caloriesBurnedPerSec = caloriesBurnedPerHour / 3600;
+                    double caloriesBurned = caloriesBurnedPerSec * secondsPassed;
+                    txtCalories.setText(String.valueOf(caloriesBurned));
+                    
                 }
             }
         });
@@ -150,15 +163,12 @@ public class Statistics extends AppCompatActivity implements GoogleApiClient.Con
                     double distance = (TotalSteps * ht * .415) / 63360;
                     txtDistance.setText(String.valueOf(decFormat.format(distance))); //displays distance
 
-                    double MET = 2.9; //default walking MET
-                    /*if(running){
-                        METvalue = 10.0;
-
-                    }
 
 
 
-                    */
+
+
+
                 }
             }
         });
@@ -200,6 +210,8 @@ public class Statistics extends AppCompatActivity implements GoogleApiClient.Con
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
 
     public double getCalories(double d){ //d is the input of the MET value
         double caloriesBurnedPerHour;
