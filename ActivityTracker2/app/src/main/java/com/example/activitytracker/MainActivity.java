@@ -21,7 +21,6 @@ public class MainActivity extends AppCompatActivity{
     Button btnSubmitHeight;
     TextView txtInputHeight;
     TextView txtInputWeight;
-    TextView txtTest;
     String inputHeight;
     String inputWeight;
 
@@ -42,14 +41,12 @@ public class MainActivity extends AppCompatActivity{
         txtInputHeight = (TextView) findViewById(R.id.txtInputHeight);
         txtInputWeight = (TextView) findViewById(R.id.txtInputWeight);
         btnSubmitHeight = (Button) findViewById(R.id.btnSubmitHeight);
-        txtTest = (TextView) findViewById((R.id.txtTesting));
 
         btnSubmitHeight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 inputHeight = txtInputHeight.getText().toString();
                 inputWeight = txtInputWeight.getText().toString();
-                txtTest.setText(inputHeight);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putString("height", inputHeight);
                 editor.commit();
