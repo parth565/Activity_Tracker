@@ -20,8 +20,10 @@ public class MainActivity extends AppCompatActivity{
 
     Button btnSubmitHeight;
     TextView txtInputHeight;
+    TextView txtInputWeight;
     TextView txtTest;
     String inputHeight;
+    String inputWeight;
 
     int PERMISSION_REQUEST_ACTIVITY_RECOGNITION = 1001;
 
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity{
         }
 
         txtInputHeight = (TextView) findViewById(R.id.txtInputHeight);
+        txtInputWeight = (TextView) findViewById(R.id.txtInputWeight);
         btnSubmitHeight = (Button) findViewById(R.id.btnSubmitHeight);
         txtTest = (TextView) findViewById((R.id.txtTesting));
 
@@ -45,6 +48,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 inputHeight = txtInputHeight.getText().toString();
+                inputWeight = txtInputWeight.getText().toString();
                 txtTest.setText(inputHeight);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putString("height", inputHeight);
@@ -76,6 +80,7 @@ public class MainActivity extends AppCompatActivity{
     public void openActivity2(){
         Intent intent = new Intent(this, Statistics.class);
         intent.putExtra("Height", inputHeight);
+        intent.putExtra("Weight", inputWeight);
         startActivity(intent);
     }
 

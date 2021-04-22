@@ -33,6 +33,8 @@ public class Statistics extends AppCompatActivity {
     private Chronometer chrono;
     private Boolean running;
     private long pauseOffset;
+    private String userWeight;
+    private String userHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +42,10 @@ public class Statistics extends AppCompatActivity {
         setContentView(R.layout.activity_statistics);
 
         decFormat = new DecimalFormat("#.##");
-        String testing = getIntent().getStringExtra("Height"); //gets the height of the user from previous page and sets it to testing
+        userHeight = getIntent().getStringExtra("Height"); //gets the height of the user from previous page and sets it to testing
+        userWeight = getIntent().getStringExtra("Weight");
         test = (TextView) findViewById(R.id.txtDistance);
-        test.setText(testing);
+        test.setText(userHeight);
         txtSteps = (TextView) findViewById(R.id.txtSteps);
         txtDistance = (TextView) findViewById(R.id.txtDistance);
         chrono = (Chronometer) findViewById(R.id.chrono);
@@ -122,27 +125,26 @@ public class Statistics extends AppCompatActivity {
                 else//shows the results
                 {
                     TotalSteps = (int)step - stepsReceived;
-                    txtSteps.setText(String.valueOf(TotalSteps));
+                    txtSteps.setText(String.valueOf(TotalSteps)); //displays steps
                     String height = getIntent().getStringExtra("Height");
                     int ht = Integer.parseInt(height);
                     double distance = (TotalSteps * ht * .415) / 63360;
-                    txtDistance.setText(String.valueOf(decFormat.format(distance)));
+                    txtDistance.setText(String.valueOf(decFormat.format(distance))); //displays distance
 
+                    double MET = 2.9; //default walking MET
+                    /*if(running){
+                        METvalue = 10.0;
+
+                    }
+
+
+
+                    */
                 }
             }
         });
     }
 
-    public void startChrono(View v){
-
-    }
-    public void pauseChrono(View v){
-
-    }
-    public void resetChrono(View v){
-        chrono.setBase(SystemClock.elapsedRealtime());
-        pauseOffset = 0;
-    }
 
     @Override
     public void onResume() {
@@ -161,5 +163,12 @@ public class Statistics extends AppCompatActivity {
         accelerometer.unregister();
         gyroscope.unregister();
         stepCounter.unregister();
+    }
+    public double getCalories(double d){ //d is the input of the MET value
+        double caloriesBurnedPerHour;
+        int weight = Integer.valueOf(userWeight);
+        double weightInKg = weight * .4535;
+        caloriesBurnedPerHour = d * weightInKg;
+        return caloriesBurnedPerHour;
     }
 }
