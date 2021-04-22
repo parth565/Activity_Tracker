@@ -1,6 +1,11 @@
 package com.example.activitytracker;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -11,11 +16,17 @@ import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.ActivityRecognition;
+import com.google.android.gms.location.ActivityRecognitionClient;
+import com.google.android.gms.tasks.Task;
+
 import java.text.DecimalFormat;
 
 import static android.content.ContentValues.TAG;
 
-public class Statistics extends AppCompatActivity {
+public class Statistics extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     TextView test;
 
@@ -33,13 +44,22 @@ public class Statistics extends AppCompatActivity {
     private Chronometer chrono;
     private Boolean running;
     private long pauseOffset;
+    private int lastCheckedSteps;
+    public GoogleApiClient mAPIclient;
     private String userWeight;
     private String userHeight;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
+
+        mAPIclient = new GoogleApiClient.Builder(Statistics.this)
+                .addApi(ActivityRecognition.API)
+                .addConnectionCallbacks(Statistics.this)
+                .addOnConnectionFailedListener(Statistics.this)
+                .build();
+        mAPIclient.connect();
 
         decFormat = new DecimalFormat("#.##");
         userHeight = getIntent().getStringExtra("Height"); //gets the height of the user from previous page and sets it to testing
@@ -78,7 +98,6 @@ public class Statistics extends AppCompatActivity {
                     running = false;
                     long secondsPassed = (SystemClock.elapsedRealtime() - chrono.getBase() / 1000);
                     String test = String.valueOf(secondsPassed);
-                    txtSteps.setText(test);
                 }
             }
         });
@@ -164,6 +183,24 @@ public class Statistics extends AppCompatActivity {
         gyroscope.unregister();
         stepCounter.unregister();
     }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Intent intent = new Intent(Statistics.this, ActivityRecognizedService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(Statistics.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        ActivityRecognition.ActivityRecognitionApi.requestActivityUpdates(mAPIclient, 5000, pendingIntent);
+//        ActivityRecognitionClient activityRecognitionClient = ActivityRecognition.getClient(this);
+//        Task task = activityRecognitionClient.requestActivityUpdates(5000, pendingIntent);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     public double getCalories(double d){ //d is the input of the MET value
         double caloriesBurnedPerHour;
         int weight = Integer.valueOf(userWeight);
